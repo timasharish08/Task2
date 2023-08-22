@@ -425,7 +425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfbcadb4ad0b1f54789c2c20334f8165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _volumeChangeTime: 5
+  _volumeChangeTime: 3
   _isOn: 0
 --- !u!4 &313148189
 Transform:
