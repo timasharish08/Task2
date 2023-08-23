@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Rogue : MonoBehaviour
 {
     [SerializeField] private float _speed;

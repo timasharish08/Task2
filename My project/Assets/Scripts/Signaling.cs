@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider2D), typeof(AudioSource))]
+[RequireComponent(typeof(AudioSource))]
 public class Signaling : MonoBehaviour
 {
     [SerializeField] private float _volumeChangeTime;
@@ -13,21 +14,39 @@ public class Signaling : MonoBehaviour
         _audio = GetComponent<AudioSource>();
     }
 
-    private void Update()
+    public void On()
     {
-        if (_isOn)
+        print("on");
+        StopCoroutine(OffAudio());
+        StartCoroutine(OnAudio());
+    }
+
+    public void Off()
+    {
+        print("off");
+        StopCoroutine((OnAudio()));
+        StartCoroutine(OffAudio());
+    }
+
+    private IEnumerator OnAudio()
+    {
+        WaitForFixedUpdate wait = new WaitForFixedUpdate();
+
+        while (_audio.volume < 1)
+        {
             _audio.volume = Mathf.MoveTowards(_audio.volume, 1, Time.deltaTime / _volumeChangeTime);
-        else
+            yield return wait;
+        }
+    }
+
+    private IEnumerator OffAudio()
+    {
+        WaitForFixedUpdate wait = new WaitForFixedUpdate();
+
+        while (_audio.volume > 0)
+        {
             _audio.volume = Mathf.MoveTowards(_audio.volume, 0, Time.deltaTime / _volumeChangeTime);
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        _isOn = true;
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        _isOn = false;
+            yield return wait;
+        }
     }
 }
