@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(AudioSource))]
 public class Signaling : MonoBehaviour
@@ -16,22 +17,22 @@ public class Signaling : MonoBehaviour
 
     public void On()
     {
-        print("on");
-        StopCoroutine(OffAudio());
-        StartCoroutine(OnAudio());
+        WaitForFixedUpdate wait = new WaitForFixedUpdate();
+
+        StopCoroutine(OffAudio(wait));
+        StartCoroutine(OnAudio(wait));
     }
 
     public void Off()
     {
-        print("off");
-        StopCoroutine((OnAudio()));
-        StartCoroutine(OffAudio());
-    }
-
-    private IEnumerator OnAudio()
-    {
         WaitForFixedUpdate wait = new WaitForFixedUpdate();
 
+        StopCoroutine(OnAudio(wait));
+        StartCoroutine(OffAudio(wait));
+    }
+
+    private IEnumerator OnAudio(WaitForFixedUpdate wait)
+    {
         while (_audio.volume < 1)
         {
             _audio.volume = Mathf.MoveTowards(_audio.volume, 1, Time.deltaTime / _volumeChangeTime);
@@ -39,10 +40,8 @@ public class Signaling : MonoBehaviour
         }
     }
 
-    private IEnumerator OffAudio()
+    private IEnumerator OffAudio(WaitForFixedUpdate wait)
     {
-        WaitForFixedUpdate wait = new WaitForFixedUpdate();
-
         while (_audio.volume > 0)
         {
             _audio.volume = Mathf.MoveTowards(_audio.volume, 0, Time.deltaTime / _volumeChangeTime);
