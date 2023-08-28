@@ -9,6 +9,7 @@ public class Signaling : MonoBehaviour
     [SerializeField] private bool _isOn;
 
     private AudioSource _audio;
+    private Coroutine audioChanger;
 
     private void Awake()
     {
@@ -17,34 +18,27 @@ public class Signaling : MonoBehaviour
 
     public void On()
     {
-        WaitForFixedUpdate wait = new WaitForFixedUpdate();
+        if (audioChanger != null)
+            StopCoroutine(audioChanger);
 
-        StopCoroutine(OffAudio(wait));
-        StartCoroutine(OnAudio(wait));
+        audioChanger = StartCoroutine(ChangeAudioVolume(1));
     }
 
     public void Off()
     {
-        WaitForFixedUpdate wait = new WaitForFixedUpdate();
+        if (audioChanger != null)
+            StopCoroutine(audioChanger);
 
-        StopCoroutine(OnAudio(wait));
-        StartCoroutine(OffAudio(wait));
+        audioChanger = StartCoroutine(ChangeAudioVolume(0));
     }
 
-    private IEnumerator OnAudio(WaitForFixedUpdate wait)
+    private IEnumerator ChangeAudioVolume(int volume)
     {
-        while (_audio.volume < 1)
-        {
-            _audio.volume = Mathf.MoveTowards(_audio.volume, 1, Time.deltaTime / _volumeChangeTime);
-            yield return wait;
-        }
-    }
+        WaitForEndOfFrame wait = new WaitForEndOfFrame();
 
-    private IEnumerator OffAudio(WaitForFixedUpdate wait)
-    {
-        while (_audio.volume > 0)
+        while (_audio.volume != volume)
         {
-            _audio.volume = Mathf.MoveTowards(_audio.volume, 0, Time.deltaTime / _volumeChangeTime);
+            _audio.volume = Mathf.MoveTowards(_audio.volume, volume, Time.deltaTime / _volumeChangeTime);
             yield return wait;
         }
     }
