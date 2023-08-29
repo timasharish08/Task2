@@ -498,7 +498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4ec69d068cbecb40874dd3960b1b09c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  signaling: {fileID: 313148188}
+  _signaling: {fileID: 0}
 --- !u!4 &386250791
 Transform:
   m_ObjectHideFlags: 0
@@ -621,7 +621,7 @@ GameObject:
   - component: {fileID: 521385856}
   m_Layer: 0
   m_Name: Rogue
-  m_TagString: Untagged
+  m_TagString: Rogue
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

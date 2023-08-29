@@ -16,7 +16,7 @@ public class Signaling : MonoBehaviour
         _audio = GetComponent<AudioSource>();
     }
 
-    public void On()
+    public void TurnOn()
     {
         if (_audioChanger != null)
             StopCoroutine(_audioChanger);
@@ -24,7 +24,7 @@ public class Signaling : MonoBehaviour
         _audioChanger = StartCoroutine(ChangeAudioVolume(1));
     }
 
-    public void Off()
+    public void TurnOff()
     {
         if (_audioChanger != null)
             StopCoroutine(_audioChanger);
@@ -32,13 +32,13 @@ public class Signaling : MonoBehaviour
         _audioChanger = StartCoroutine(ChangeAudioVolume(0));
     }
 
-    private IEnumerator ChangeAudioVolume(int volume)
+    private IEnumerator ChangeAudioVolume(float targetVolume)
     {
         WaitForEndOfFrame wait = new WaitForEndOfFrame();
 
-        while (_audio.volume != volume)
+        while (_audio.volume != targetVolume)
         {
-            _audio.volume = Mathf.MoveTowards(_audio.volume, volume, Time.deltaTime / _volumeChangeTime);
+            _audio.volume = Mathf.MoveTowards(_audio.volume, targetVolume, Time.deltaTime / _volumeChangeTime);
             yield return wait;
         }
     }
