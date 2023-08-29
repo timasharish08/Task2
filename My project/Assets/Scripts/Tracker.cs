@@ -7,13 +7,13 @@ public class Tracker : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Rogue")
+        if (collision.GetComponent<Rogue>())
             _signaling.TurnOn();
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Rogue")
+        if (collision.GetComponent<Rogue>())
             _signaling.TurnOff();
     }
 }

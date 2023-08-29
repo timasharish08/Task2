@@ -11,35 +11,32 @@ public class Rogue : MonoBehaviour
     private Vector3[] _positions;
     private int _currentPosition;
 
-    private bool _isMoving;
-
     private Rigidbody2D _rigidbody;
 
     private void Start()
     {
         _positions = GetComponentsInChildren<Transform>().Select(child => child.position).ToArray();
         _rigidbody = GetComponent<Rigidbody2D>();
-        _isMoving = true;
+        StartCoroutine(MoveToPosition());
     }
 
-    private void FixedUpdate()
+    private void OnMoveEnd()
     {
-        if (_isMoving)
+        _currentPosition = ++_currentPosition % _positions.Length;
+        StartCoroutine(MoveToPosition());
+    }
+
+    private IEnumerator MoveToPosition()
+    {
+        WaitForFixedUpdate wait = new WaitForFixedUpdate();
+
+        while (transform.position != _positions[_currentPosition])
         {
             _rigidbody.position = Vector3.MoveTowards(_rigidbody.position, _positions[_currentPosition], _speed * Time.deltaTime);
-
-            if (transform.position == _positions[_currentPosition])
-            {
-                _currentPosition = ++_currentPosition % _positions.Length;
-                _isMoving = false;
-                StartCoroutine(Wait());
-            }
+            yield return wait;
         }
-    }
 
-    private IEnumerator Wait()
-    {
         yield return new WaitForSeconds(_waitTime);
-        _isMoving = true;
+        OnMoveEnd();
     }
 }
